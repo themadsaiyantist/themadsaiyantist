@@ -66,12 +66,12 @@ MODULE 6  ·  MLOps — the part nobody teaches          ░░░░░░░�
 <tr>
 <td width="55%">
 
-<img src="https://github-readme-stats.vercel.app/api?username=USERNAME&show_icons=true&hide_border=true&theme=transparent&title_color=ff9f1c&icon_color=ff9f1c&text_color=8b98a8&hide_title=true" alt="GitHub stats">
+<img src="https://github-readme-stats.vercel.app/api?username=themadsaiyantist&show_icons=true&hide_border=true&theme=transparent&title_color=ff9f1c&icon_color=ff9f1c&text_color=8b98a8&hide_title=true" alt="GitHub stats">
 
 </td>
 <td width="45%">
 
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=USERNAME&layout=compact&hide_border=true&theme=transparent&title_color=ff9f1c&text_color=8b98a8&langs_count=6" alt="Top languages">
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=themadsaiyantist&layout=compact&hide_border=true&theme=transparent&title_color=ff9f1c&text_color=8b98a8&langs_count=6" alt="Top languages">
 
 </td>
 </tr>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 400" width="1280" height="400" role="img" aria-label="TheMadSaiyantist — Python to MLOps, from zero, in public">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="55%" stop-color="#11161f"/>
+      <stop offset="100%" stop-color="#0a0d13"/>
+    </linearGradient>
+    <radialGradient id="aura" cx="50%" cy="52%" r="50%">
+      <stop offset="0%" stop-color="#ffb020" stop-opacity="0.30"/>
+      <stop offset="45%" stop-color="#ff7a18" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#ff7a18" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffd15c"/>
+      <stop offset="50%" stop-color="#ff9f1c"/>
+      <stop offset="100%" stop-color="#ff6a13"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff6a13"/>
+      <stop offset="100%" stop-color="#ffd15c"/>
+    </linearGradient>
+    <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff9f1c" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#ff9f1c" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ff9f1c" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="400" fill="url(#bg)"/>
+
+  <!-- faint grid -->
+  <g stroke="#ffffff" stroke-opacity="0.035" stroke-width="1">
+    <path d="M0 40H1280M0 80H1280M0 120H1280M0 160H1280M0 200H1280M0 240H1280M0 280H1280M0 320H1280M0 360H1280"/>
+    <path d="M40 0V400M120 0V400M200 0V400M280 0V400M360 0V400M440 0V400M520 0V400M600 0V400M680 0V400M760 0V400M840 0V400M920 0V400M1000 0V400M1080 0V400M1160 0V400M1240 0V400"/>
+  </g>
+
+  <rect width="1280" height="400" fill="url(#aura)"/>
+
+  <!-- rising energy shards -->
+  <g fill="#ffb020">
+    <polygon points="150,300 156,262 162,300 156,312" opacity="0.45"/>
+    <polygon points="238,332 243,300 248,332 243,342" opacity="0.30"/>
+    <polygon points="1042,300 1048,258 1054,300 1048,313" opacity="0.42"/>
+    <polygon points="1130,336 1135,306 1140,336 1135,345" opacity="0.28"/>
+    <polygon points="330,352 334,330 338,352 334,359" opacity="0.22"/>
+    <polygon points="960,352 964,328 968,352 964,360" opacity="0.24"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="640" y="176" text-anchor="middle"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="78" font-weight="800" letter-spacing="2"
+        fill="url(#word)">THE MAD SAIYANTIST</text>
+
+  <rect x="340" y="204" width="600" height="2" fill="url(#rule)"/>
+
+  <text x="640" y="248" text-anchor="middle"
+        font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
+        font-size="21" letter-spacing="4" fill="#8b98a8">PYTHON → ML → MLOPS</text>
+
+  <text x="640" y="284" text-anchor="middle"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="17" fill="#5c6672">Building a 0-to-hero ML bootcamp from scratch. In public.</text>
+
+  <!-- progress rail -->
+  <rect x="440" y="322" width="400" height="6" rx="3" fill="#1f2630"/>
+  <rect x="440" y="322" width="286" height="6" rx="3" fill="url(#bar)"/>
+  <text x="440" y="352" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace" font-size="12" letter-spacing="2" fill="#5c6672">MODULE 0</text>
+  <text x="840" y="352" text-anchor="end" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace" font-size="12" letter-spacing="2" fill="#5c6672">MODULE 6</text>
+</svg>

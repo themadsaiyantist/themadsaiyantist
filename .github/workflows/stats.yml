@@ -1,0 +1,39 @@
+# Redraws the stats, languages and featured-repo cards in assets/ once a day,
+# from public repositories only, and commits them only when a card changed.
+name: stats
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stats
+  cancel-in-progress: false
+
+jobs:
+  cards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Draw the cards
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/stats.py
+
+      - name: Commit if a card changed
+        run: |
+          git add assets/stats-*.svg assets/langs-*.svg assets/repo-*.svg
+          if git diff --cached --quiet; then
+            echo "No card changed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: redraw the stats cards"
+          git push

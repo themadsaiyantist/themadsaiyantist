@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 50" width="900" height="50" role="img" aria-label="7 modules, 39 sections, 130 lessons. Every lesson free. From your first terminal to a monitored model in production. Build it. Break it. Observe it. Fix it. Explain it. Coding Agents: 15 free lessons on Claude Code. Free to learn, pay to prove it.">
+<style>
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.k{animation:blink 1s steps(1,end) infinite}
+@keyframes t0{0%{transform:scaleX(0);animation-timing-function:steps(55,end)}8.40%,17.20%{transform:scaleX(1);animation-timing-function:steps(55,end)}19.40%,100%{transform:scaleX(0)}}
+@keyframes m0{0%{transform:translateX(0);animation-timing-function:steps(55,end)}8.40%,17.20%{transform:translateX(660px);animation-timing-function:steps(55,end)}19.40%,100%{transform:translateX(0)}}
+@keyframes v0{0%{opacity:0}0.00%,19.40%{opacity:1}19.41%,100%{opacity:0}}
+.r0{transform-box:fill-box;transform-origin:0 0;animation:t0 22.0s -2.20s infinite}
+.m0{animation:m0 22.0s -2.20s infinite}
+.v0{opacity:0;animation:v0 22.0s steps(1,end) -2.20s infinite}
+@keyframes t1{0%,20.00%{transform:scaleX(0);animation-timing-function:steps(60,end)}28.40%,37.20%{transform:scaleX(1);animation-timing-function:steps(60,end)}39.40%,100%{transform:scaleX(0)}}
+@keyframes m1{0%,20.00%{transform:translateX(0);animation-timing-function:steps(60,end)}28.40%,37.20%{transform:translateX(720px);animation-timing-function:steps(60,end)}39.40%,100%{transform:translateX(0)}}
+@keyframes v1{0%{opacity:0}20.00%,39.40%{opacity:1}39.41%,100%{opacity:0}}
+.r1{transform-box:fill-box;transform-origin:0 0;animation:t1 22.0s -2.20s infinite}
+.m1{animation:m1 22.0s -2.20s infinite}
+.v1{opacity:0;animation:v1 22.0s steps(1,end) -2.20s infinite}
+@keyframes t2{0%,40.00%{transform:scaleX(0);animation-timing-function:steps(51,end)}48.40%,57.20%{transform:scaleX(1);animation-timing-function:steps(51,end)}59.40%,100%{transform:scaleX(0)}}
+@keyframes m2{0%,40.00%{transform:translateX(0);animation-timing-function:steps(51,end)}48.40%,57.20%{transform:translateX(612px);animation-timing-function:steps(51,end)}59.40%,100%{transform:translateX(0)}}
+@keyframes v2{0%{opacity:0}40.00%,59.40%{opacity:1}59.41%,100%{opacity:0}}
+.r2{transform-box:fill-box;transform-origin:0 0;animation:t2 22.0s -2.20s infinite}
+.m2{animation:m2 22.0s -2.20s infinite}
+.v2{opacity:0;animation:v2 22.0s steps(1,end) -2.20s infinite}
+@keyframes t3{0%,60.00%{transform:scaleX(0);animation-timing-function:steps(46,end)}68.40%,77.20%{transform:scaleX(1);animation-timing-function:steps(46,end)}79.40%,100%{transform:scaleX(0)}}
+@keyframes m3{0%,60.00%{transform:translateX(0);animation-timing-function:steps(46,end)}68.40%,77.20%{transform:translateX(552px);animation-timing-function:steps(46,end)}79.40%,100%{transform:translateX(0)}}
+@keyframes v3{0%{opacity:0}60.00%,79.40%{opacity:1}79.41%,100%{opacity:0}}
+.r3{transform-box:fill-box;transform-origin:0 0;animation:t3 22.0s -2.20s infinite}
+.m3{animation:m3 22.0s -2.20s infinite}
+.v3{opacity:0;animation:v3 22.0s steps(1,end) -2.20s infinite}
+@keyframes t4{0%,80.00%{transform:scaleX(0);animation-timing-function:steps(31,end)}88.40%,97.20%{transform:scaleX(1);animation-timing-function:steps(31,end)}99.40%,100%{transform:scaleX(0)}}
+@keyframes m4{0%,80.00%{transform:translateX(0);animation-timing-function:steps(31,end)}88.40%,97.20%{transform:translateX(372px);animation-timing-function:steps(31,end)}99.40%,100%{transform:translateX(0)}}
+@keyframes v4{0%{opacity:0}80.00%,99.40%{opacity:1}99.41%,100%{opacity:0}}
+.r4{transform-box:fill-box;transform-origin:0 0;animation:t4 22.0s -2.20s infinite}
+.m4{animation:m4 22.0s -2.20s infinite}
+.v4{opacity:0;animation:v4 22.0s steps(1,end) -2.20s infinite}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}.v0{opacity:1}.r0{transform:none}.m0{transform:translateX(660px)}}
+</style>
+<defs>
+<clipPath id="c0"><rect class="r0" x="60" y="6" width="660" height="38"/></clipPath>
+<clipPath id="c1"><rect class="r1" x="60" y="6" width="720" height="38"/></clipPath>
+<clipPath id="c2"><rect class="r2" x="60" y="6" width="612" height="38"/></clipPath>
+<clipPath id="c3"><rect class="r3" x="60" y="6" width="552" height="38"/></clipPath>
+<clipPath id="c4"><rect class="r4" x="60" y="6" width="372" height="38"/></clipPath>
+</defs>
+<text x="34" y="33" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="20" font-weight="700" fill="#ffb547">❯</text>
+<g class="v0">
+<text clip-path="url(#c0)" x="60" y="33" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="20" textLength="660" lengthAdjust="spacingAndGlyphs" fill="#e9edf2">7 modules, 39 sections, 130 lessons. Every lesson free.</text>
+<g class="m0"><rect class="k" x="62" y="16" width="11" height="22" fill="#ffb547"/></g>
+</g>
+<g class="v1">
+<text clip-path="url(#c1)" x="60" y="33" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="20" textLength="720" lengthAdjust="spacingAndGlyphs" fill="#e9edf2">From your first terminal to a monitored model in production.</text>
+<g class="m1"><rect class="k" x="62" y="16" width="11" height="22" fill="#ffb547"/></g>
+</g>
+<g class="v2">
+<text clip-path="url(#c2)" x="60" y="33" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="20" textLength="612" lengthAdjust="spacingAndGlyphs" fill="#e9edf2">Build it. Break it. Observe it. Fix it. Explain it.</text>
+<g class="m2"><rect class="k" x="62" y="16" width="11" height="22" fill="#ffb547"/></g>
+</g>
+<g class="v3">
+<text clip-path="url(#c3)" x="60" y="33" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="20" textLength="552" lengthAdjust="spacingAndGlyphs" fill="#e9edf2">Coding Agents: 15 free lessons on Claude Code.</text>
+<g class="m3"><rect class="k" x="62" y="16" width="11" height="22" fill="#ffb547"/></g>
+</g>
+<g class="v4">
+<text clip-path="url(#c4)" x="60" y="33" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="20" textLength="372" lengthAdjust="spacingAndGlyphs" fill="#e9edf2">Free to learn, pay to prove it.</text>
+<g class="m4"><rect class="k" x="62" y="16" width="11" height="22" fill="#ffb547"/></g>
+</g>
+</svg>

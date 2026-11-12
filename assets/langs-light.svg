@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 118" width="840" height="118" role="img" aria-label="Top languages across public repositories: Python 95.9 percent, JavaScript 3.7 percent, Shell 0.4 percent">
+<style>@keyframes sweep{0%,55%{transform:translateX(-160px)}100%{transform:translateX(900px)}}.sw{animation:sweep 4.5s ease-in-out infinite}@media (prefers-reduced-motion: reduce){*{animation:none!important}}</style>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3df"/><stop offset=".6" stop-color="#ffffff"/></linearGradient><linearGradient id="num" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f29a00"/><stop offset="1" stop-color="#c2410c"/></linearGradient><linearGradient id="bar" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e2580a"/><stop offset="1" stop-color="#f5a524"/></linearGradient><linearGradient id="edge" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e2580a" stop-opacity="0"/><stop offset=".5" stop-color="#e2580a"/><stop offset="1" stop-color="#e2580a" stop-opacity="0"/></linearGradient></defs>
+<rect x=".5" y=".5" width="839" height="117" rx="12" fill="url(#bg)" stroke="#e2580a" stroke-opacity=".30"/><rect x="40" y=".5" width="760" height="1.5" fill="url(#edge)"/>
+<text x="24" y="34" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="13" font-weight="700" letter-spacing="3" fill="#c2410c">TOP LANGUAGES</text>
+<text x="816" y="34" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace" font-size="11" letter-spacing="2" fill="#59636e">BY BYTES, PUBLIC REPOSITORIES</text>
+<linearGradient id="shine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<clipPath id="track"><rect x="24" y="50" width="792" height="12" rx="6"/></clipPath>
+<rect x="24" y="50" width="792" height="12" rx="6" fill="#f1e8dc"/>
+<g clip-path="url(#track)"><g>
+<rect x="24.00" y="50" width="760.02" height="12" fill="#3572A5"/>
+<rect x="783.52" y="50" width="29.64" height="12" fill="#f1e05a"/>
+<rect x="812.66" y="50" width="3.84" height="12" fill="#89e051"/>
+</g><rect class="sw" x="24" y="50" width="120" height="12" fill="url(#shine)"/></g>
+<circle cx="29.0" cy="88" r="5" fill="#3572A5"/>
+<text x="40.0" y="92" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="13" font-weight="600" fill="#1f2328">Python <tspan fill="#59636e" font-weight="400">95.9%</tspan></text>
+<circle cx="293.0" cy="88" r="5" fill="#f1e05a"/>
+<text x="304.0" y="92" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="13" font-weight="600" fill="#1f2328">JavaScript <tspan fill="#59636e" font-weight="400">3.7%</tspan></text>
+<circle cx="557.0" cy="88" r="5" fill="#89e051"/>
+<text x="568.0" y="92" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="13" font-weight="600" fill="#1f2328">Shell <tspan fill="#59636e" font-weight="400">0.4%</tspan></text>
+</svg>

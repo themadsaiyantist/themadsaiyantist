@@ -111,7 +111,7 @@ Fifteen lessons on Claude Code take you from a first session to a harness of you
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/stats-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/stats-light.svg">
-  <img alt="Public GitHub stats" src="./assets/stats-dark.svg" width="100%">
+  <img alt="GitHub stats, public and private repositories together: commits, pull requests, merges, repositories, lines added and removed, days with a commit and the longest streak" src="./assets/stats-dark.svg" width="100%">
 </picture>
 
 <picture>
@@ -120,7 +120,7 @@ Fifteen lessons on Claude Code take you from a first session to a harness of you
   <img alt="Top languages across public repositories" src="./assets/langs-dark.svg" width="100%">
 </picture>
 
-<sub>Drawn daily by this repo's own [GitHub Action](./.github/workflows/stats.yml) from public repositories only. No outside stats service.</sub>
+<sub>Drawn daily by this repo's own [GitHub Action](./.github/workflows/stats.yml). The numbers count private repositories too, never their names. Languages read public repositories only. No outside stats service.</sub>
 
 ---
 

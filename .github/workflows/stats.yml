@@ -1,5 +1,7 @@
 # Redraws the stats, languages and featured-repo cards in assets/ once a day,
-# from public repositories only, and commits them only when a card changed.
+# and commits them only when a card changed. The stats card counts public and
+# private repositories together, so it reads the owner's read-only token from
+# the repository secret STATS_TOKEN.
 name: stats
 
 on:
@@ -23,7 +25,7 @@ jobs:
 
       - name: Draw the cards
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
         run: python3 scripts/stats.py
 
       - name: Commit if a card changed

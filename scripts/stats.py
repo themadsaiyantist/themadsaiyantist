@@ -1,20 +1,22 @@
-"""Write the profile's stats cards from GitHub's GraphQL API, public repositories only.
+"""Write the profile's cards from GitHub's GraphQL API.
 
-Run with: GITHUB_TOKEN=... python3 scripts/stats.py
-Reads user(login: LOGIN), never viewer, and keeps only public repositories:
-the repository list asks for privacy: PUBLIC, and every contribution is
-dropped unless its repository reports isPrivate: false.
+Run with: STATS_TOKEN=... python3 scripts/stats.py
+STATS_TOKEN is the account owner's own read-only token, because only the owner
+can see private repositories. The script refuses any other viewer.
+The Scouter card is numbers only, public and private together: counts, never a
+private repository's name, description or language. The languages and featured
+cards read public repositories alone, as before.
 Writes assets/stats-{dark,light}.svg, assets/langs-{dark,light}.svg and
 assets/repo-{name}-{dark,light}.svg for each featured repository.
-Stdlib only. Nothing in the cards depends on the clock beyond the month,
-so a rerun on unchanged data writes byte-identical files.
+Stdlib only. Nothing in the cards reads the clock, so a rerun on unchanged
+data writes byte-identical files.
 """
 
 import json
 import os
 import sys
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from xml.sax.saxutils import escape
 
@@ -45,10 +47,10 @@ THEMES = {
 REDUCED = "@media (prefers-reduced-motion: reduce){*{animation:none!important}}"
 
 
-def graphql(query, token):
+def graphql(query, token, variables=None):
     req = urllib.request.Request(
         API,
-        data=json.dumps({"query": query}).encode(),
+        data=json.dumps({"query": query, "variables": variables or {}}).encode(),
         headers={"Authorization": f"bearer {token}", "Content-Type": "application/json",
                  "User-Agent": "profile-stats-script"},
     )
@@ -59,32 +61,7 @@ def graphql(query, token):
     return body["data"]
 
 
-def months_back(now, count):
-    """The first instant of each of the last `count` calendar months, oldest first, plus the end."""
-    y, m = now.year, now.month
-    starts = []
-    for _ in range(count):
-        starts.append(datetime(y, m, 1, tzinfo=timezone.utc))
-        y, m = (y, m - 1) if m > 1 else (y - 1, 12)
-    starts.reverse()
-    return starts
-
-
-def iso(dt):
-    return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
 def fetch(token):
-    now = datetime.now(timezone.utc)
-    starts = months_back(now, 12)
-    month_fields = []
-    for i, start in enumerate(starts):
-        end = starts[i + 1] if i + 1 < len(starts) else now
-        month_fields.append(
-            f'm{i}: contributionsCollection(from: "{iso(start)}", to: "{iso(end)}") {{'
-            f" commitContributionsByRepository(maxRepositories: 100) {{"
-            f" repository {{ isPrivate }} contributions {{ totalCount }} }} }}"
-        )
     featured = "\n".join(
         f'f{i}: repository(owner: "{LOGIN}", name: "{name}") {{ name isPrivate description stargazerCount '
         f"forkCount url primaryLanguage {{ name color }} }}"
@@ -97,19 +74,11 @@ def fetch(token):
           nodes {{ name isPrivate stargazerCount
             languages(first: 20, orderBy: {{field: SIZE, direction: DESC}}) {{ edges {{ size node {{ name color }} }} }} }}
         }}
-        year: contributionsCollection {{
-          commitContributionsByRepository(maxRepositories: 100) {{ repository {{ isPrivate }} contributions {{ totalCount }} }}
-          pullRequestContributionsByRepository(maxRepositories: 100) {{ repository {{ isPrivate }} contributions {{ totalCount }} }}
-        }}
-        {" ".join(month_fields)}
       }}
       {featured}
     }}"""
     data = graphql(query, token)
     user = data["user"]
-
-    def public_total(groups):
-        return sum(g["contributions"]["totalCount"] for g in groups if g["repository"]["isPrivate"] is False)
 
     repos = [r for r in user["repositories"]["nodes"] if r["isPrivate"] is False]
     langs = {}
@@ -119,10 +88,6 @@ def fetch(token):
             size, color = langs.get(name, (0, e["node"]["color"] or "#8b949e"))
             langs[name] = (size + e["size"], color)
 
-    months = []
-    for i, start in enumerate(starts):
-        months.append((start.strftime("%b"), public_total(user[f"m{i}"]["commitContributionsByRepository"])))
-
     featured_repos = []
     for i in range(len(FEATURED)):
         r = data.get(f"f{i}")
@@ -130,14 +95,87 @@ def fetch(token):
             featured_repos.append(r)
 
     return {
-        "commits": public_total(user["year"]["commitContributionsByRepository"]),
-        "prs": public_total(user["year"]["pullRequestContributionsByRepository"]),
-        "repos": len(repos),
-        "stars": sum(r["stargazerCount"] for r in repos),
         "langs": sorted(langs.items(), key=lambda kv: (-kv[1][0], kv[0])),
-        "months": months,
         "featured": featured_repos,
     }
+
+
+REPOS_Q = """query {
+  viewer { login
+    repositories(ownerAffiliations: OWNER, first: 100) {
+      nodes { name owner { login } isPrivate isFork stargazerCount defaultBranchRef { name } } } } }"""
+
+HISTORY_Q = """query($owner: String!, $name: String!, $cursor: String) {
+  repository(owner: $owner, name: $name) { defaultBranchRef { target { ... on Commit {
+    history(first: 100, after: $cursor) { pageInfo { hasNextPage endCursor }
+      nodes { authoredDate additions deletions parents { totalCount } author { name user { login } } } } } } } } }"""
+
+PRS_Q = """query($cursor: String) {
+  viewer { pullRequests(first: 100, after: $cursor) { pageInfo { hasNextPage endCursor }
+    nodes { merged repository { isPrivate } } } } }"""
+
+
+def is_bot(author):
+    user = author.get("user") or {}
+    return (author.get("name") or "").endswith("[bot]") or (user.get("login") or "").endswith("[bot]")
+
+
+def longest_streak(days):
+    """The longest run of consecutive calendar days, UTC, with at least one commit."""
+    ordered = sorted(datetime.strptime(d, "%Y-%m-%d").toordinal() for d in days)
+    best = run = 0
+    for i, day in enumerate(ordered):
+        run = run + 1 if i and day == ordered[i - 1] + 1 else 1
+        best = max(best, run)
+    return best
+
+
+def totals(token):
+    """Every number on the Scouter card, public and private together, read as the owner.
+
+    Commits are the owner's non-merge commits on each owned repository's default
+    branch, bots left out, so a merged branch is never counted twice. Lines are
+    those commits' additions and deletions. Pull requests are every one the owner
+    opened, anywhere.
+    """
+    viewer = graphql(REPOS_Q, token)["viewer"]
+    if viewer["login"] != LOGIN:
+        sys.exit(f"STATS_TOKEN belongs to {viewer['login']}, not {LOGIN}: the private numbers would be wrong")
+    repos = [r for r in viewer["repositories"]["nodes"] if not r["isFork"]]
+    t = {"commits": [0, 0], "prs": [0, 0], "repos": [0, 0], "merged": 0,
+         "added": 0, "removed": 0, "stars": 0, "days": set()}
+    for r in repos:
+        side = 1 if r["isPrivate"] else 0
+        t["repos"][side] += 1
+        t["stars"] += r["stargazerCount"]
+        if not r["defaultBranchRef"]:
+            continue
+        cursor = None
+        while True:
+            data = graphql(HISTORY_Q, token, {"owner": r["owner"]["login"], "name": r["name"], "cursor": cursor})
+            history = data["repository"]["defaultBranchRef"]["target"]["history"]
+            for c in history["nodes"]:
+                if c["parents"]["totalCount"] > 1 or is_bot(c["author"]):
+                    continue
+                t["commits"][side] += 1
+                t["added"] += c["additions"] or 0
+                t["removed"] += c["deletions"] or 0
+                t["days"].add(c["authoredDate"][:10])
+            if not history["pageInfo"]["hasNextPage"]:
+                break
+            cursor = history["pageInfo"]["endCursor"]
+    cursor = None
+    while True:
+        prs = graphql(PRS_Q, token, {"cursor": cursor})["viewer"]["pullRequests"]
+        for pr in prs["nodes"]:
+            t["prs"][1 if pr["repository"]["isPrivate"] else 0] += 1
+            t["merged"] += pr["merged"]
+        if not prs["pageInfo"]["hasNextPage"]:
+            break
+        cursor = prs["pageInfo"]["endCursor"]
+    t["streak"] = longest_streak(t["days"])
+    t["days"] = len(t["days"])
+    return t
 
 
 def defs(c, h):
@@ -162,16 +200,27 @@ def frame(c, width, h):
     )
 
 
-def stats_card(s, theme):
+def stats_card(t, theme):
     c = THEMES[theme]
-    width, h = 840, 210
+    width, h = 840, 252
+    tiles = [
+        (f"{sum(t['commits']):,}", "COMMITS", t["commits"]),
+        (f"{sum(t['prs']):,}", "PULL REQUESTS", t["prs"]),
+        (f"{t['merged']:,}", "MERGED", None),
+        (f"{sum(t['repos']):,}", "REPOSITORIES", t["repos"]),
+        (f"+{t['added']:,}", "LINES ADDED", None),
+        (f"-{t['removed']:,}", "LINES REMOVED", None),
+        (f"{t['days']:,}", "DAYS WITH A COMMIT", None),
+        (f"{t['streak']:,}", "LONGEST STREAK, DAYS", None),
+    ]
+    label = ", ".join(
+        f"{value} {name.lower()}" + (f" ({split[0]} public, {split[1]} private)" if split else "")
+        for value, name, split in tiles
+    )
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {h}" width="{width}" height="{h}" role="img" '
-        f'aria-label="Public GitHub stats: {s["commits"]} commits in the last year, {s["prs"]} pull requests, '
-        f'{s["repos"]} public repositories, {s["stars"]} stars">',
+        f'aria-label="GitHub stats, public and private repositories together: {label}">',
         "<style>@keyframes blip{0%,100%{opacity:.35}50%{opacity:1}}"
-        "@keyframes hum{0%,100%{opacity:.85}50%{opacity:1}}"
-        ".b{animation:hum 2.4s ease-in-out infinite}"
         ".d{animation:blip 1.6s ease-in-out infinite}" + REDUCED + "</style>",
         defs(c, h),
         frame(c, width, h),
@@ -179,41 +228,22 @@ def stats_card(s, theme):
         f'<text x="44" y="36" font-family="{MONO}" font-size="13" font-weight="700" letter-spacing="3" '
         f'fill="{c["title"]}">SCOUTER READING</text>',
         f'<text x="{width - 24}" y="36" text-anchor="end" font-family="{MONO}" font-size="11" letter-spacing="2" '
-        f'fill="{c["muted"]}">PUBLIC REPOSITORIES ONLY</text>',
+        f'fill="{c["muted"]}">PUBLIC + PRIVATE, ALL TIME</text>',
+        f'<rect x="24" y="{h / 2 + 22}" width="{width - 48}" height="1" fill="{c["muted"]}" opacity=".18"/>',
     ]
-    tiles = [
-        (s["commits"], "COMMITS, LAST YEAR"),
-        (s["prs"], "PULL REQUESTS, LAST YEAR"),
-        (s["repos"], "PUBLIC REPOSITORIES"),
-        (s["stars"], "STARS EARNED"),
-    ]
-    for i, (value, label) in enumerate(tiles):
-        x = 30 + (i % 2) * 190
-        y = 100 + (i // 2) * 76
-        out.append(f'<text x="{x}" y="{y}" font-family="{HEAVY}" font-size="38" font-weight="900" '
-                   f'fill="url(#num)">{value:,}</text>')
-        out.append(f'<text x="{x}" y="{y + 20}" font-family="{MONO}" font-size="10.5" letter-spacing="1.5" '
-                   f'fill="{c["muted"]}">{label}</text>')
-
-    # monthly public commits, the ki gauge
-    gx, gy, gw, gh = 430, 62, 386, 112
-    out.append(f'<text x="{gx}" y="{gy - 6}" font-family="{MONO}" font-size="10.5" letter-spacing="1.5" '
-               f'fill="{c["muted"]}">COMMITS PER MONTH</text>')
-    top = max([n for _, n in s["months"]] + [1])
-    step = gw / len(s["months"])
-    bw = step * 0.62
-    out.append(f'<rect x="{gx}" y="{gy + gh}" width="{gw}" height="1" fill="{c["muted"]}" opacity=".4"/>')
-    for i, (label, n) in enumerate(s["months"]):
-        x = gx + i * step + (step - bw) / 2
-        out.append(f'<rect x="{x:.1f}" y="{gy + 6}" width="{bw:.1f}" height="{gh - 6}" rx="3" fill="{c["track"]}" opacity=".7"/>')
-        if n:
-            bh = max(4.0, (gh - 6) * n / top)
-            out.append(f'<rect class="b" x="{x:.1f}" y="{gy + gh - bh:.1f}" '
-                       f'width="{bw:.1f}" height="{bh:.1f}" rx="3" fill="url(#bar)"/>')
-            out.append(f'<text x="{x + bw / 2:.1f}" y="{gy + gh - bh - 5:.1f}" text-anchor="middle" font-family="{MONO}" '
-                       f'font-size="10" fill="{c["text"]}">{n}</text>')
-        out.append(f'<text x="{x + bw / 2:.1f}" y="{gy + gh + 16}" text-anchor="middle" font-family="{MONO}" '
-                   f'font-size="10" fill="{c["muted"]}">{label[0]}</text>')
+    col = (width - 48) / 4
+    for i, (value, name, split) in enumerate(tiles):
+        x = 24 + (i % 4) * col + 6
+        y = 98 + (i // 4) * 104
+        # shrink a long number to its column, Arial Black digits run about 0.7em wide
+        size = min(32, round((col - 14) / (0.7 * len(value)), 1))
+        out.append(f'<text x="{x:.1f}" y="{y}" font-family="{HEAVY}" font-size="{size}" font-weight="900" '
+                   f'fill="url(#num)">{value}</text>')
+        out.append(f'<text x="{x:.1f}" y="{y + 21}" font-family="{MONO}" font-size="10.5" letter-spacing="1.5" '
+                   f'fill="{c["muted"]}">{name}</text>')
+        if split:
+            out.append(f'<text x="{x:.1f}" y="{y + 38}" font-family="{MONO}" font-size="10.5" fill="{c["text"]}">'
+                       f'{split[0]:,} public <tspan fill="{c["muted"]}">/</tspan> {split[1]:,} private</text>')
     out.append("</svg>")
     return "\n".join(out) + "\n"
 
@@ -311,22 +341,23 @@ def repo_card(r, theme):
 
 
 def main():
-    token = os.environ.get("GITHUB_TOKEN")
+    token = os.environ.get("STATS_TOKEN")
     if not token:
-        sys.exit("GITHUB_TOKEN is not set")
+        sys.exit("STATS_TOKEN is not set: add the owner's read-only token as the repository secret STATS_TOKEN")
     s = fetch(token)
+    t = totals(token)
     ASSETS.mkdir(exist_ok=True)
     written = []
     for theme in THEMES:
-        files = {f"stats-{theme}.svg": stats_card(s, theme), f"langs-{theme}.svg": langs_card(s, theme)}
+        files = {f"stats-{theme}.svg": stats_card(t, theme), f"langs-{theme}.svg": langs_card(s, theme)}
         for r in s["featured"]:
             files[f"repo-{r['name']}-{theme}.svg"] = repo_card(r, theme)
         for name, svg in files.items():
             (ASSETS / name).write_text(svg, encoding="utf-8")
             written.append(name)
-    print(f"commits {s['commits']}, pull requests {s['prs']}, public repositories {s['repos']}, stars {s['stars']}")
+    print(f"commits {t['commits']}, pull requests {t['prs']}, merged {t['merged']}, repositories {t['repos']}")
+    print(f"lines +{t['added']} -{t['removed']}, active days {t['days']}, longest streak {t['streak']}, stars {t['stars']}")
     print("languages " + ", ".join(f"{n} {sz}" for n, (sz, _) in s["langs"]))
-    print("months " + ", ".join(f"{m} {n}" for m, n in s["months"]))
     print("featured " + ", ".join(r["name"] for r in s["featured"]))
     print("wrote " + ", ".join(sorted(written)))
 

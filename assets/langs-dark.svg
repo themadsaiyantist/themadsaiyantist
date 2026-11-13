@@ -8,9 +8,9 @@
 <clipPath id="track"><rect x="24" y="50" width="792" height="12" rx="6"/></clipPath>
 <rect x="24" y="50" width="792" height="12" rx="6" fill="#21262d"/>
 <g clip-path="url(#track)"><g>
-<rect x="24.00" y="50" width="763.63" height="12" fill="#3572A5"/>
-<rect x="787.13" y="50" width="26.40" height="12" fill="#f1e05a"/>
-<rect x="813.03" y="50" width="3.47" height="12" fill="#89e051"/>
+<rect x="24.00" y="50" width="763.77" height="12" fill="#3572A5"/>
+<rect x="787.27" y="50" width="26.28" height="12" fill="#f1e05a"/>
+<rect x="813.05" y="50" width="3.45" height="12" fill="#89e051"/>
 </g><rect class="sw" x="24" y="50" width="120" height="12" fill="url(#shine)"/></g>
 <circle cx="29.0" cy="88" r="5" fill="#3572A5"/>
 <text x="40.0" y="92" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="13" font-weight="600" fill="#e6edf3">Python <tspan fill="#8b949e" font-weight="400">96.4%</tspan></text>
